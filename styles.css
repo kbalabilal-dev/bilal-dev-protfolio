@@ -1,0 +1,610 @@
+/* =====================================================
+   bilal-dev portfolio: dark grey + ONE accent colour
+   Drop-in replacement for your styles.css
+   ===================================================== */
+
+   :root {
+    /* fluid root size: everything in rem scales with the monitor
+       ~14px on small screens, ~15.5px at 1280, ~17.7px at 1920,
+       ~20px at 1440p, capped at 24px on 4K */
+    font-size: clamp(14px, 0.35vw + 11px, 24px);
+
+    /* greys */
+    --bg: #1c1c1e;                       /* page background: dark grey */
+    --surface: #252527;                  /* cards, nav */
+    --fg: #f2f2f0;                       /* main text */
+    --muted: rgba(242, 242, 240, .62);   /* secondary text */
+    --line: rgba(242, 242, 240, .12);    /* dividers */
+    --grid: rgba(242, 242, 240, .05);    /* header pixel grid */
+
+    /* the one special colour: pick ONE, comment out the others */
+    /* --accent: #22d3ee; */             /* cyan */
+    --accent: #ef4444;                   /* red */
+    /* --accent: #2f9e6e; */             /* dark green */
+
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --step: steps(6, end);               /* choppy "pixel" feel for hovers */
+
+    /* distance from the window border and between cards.
+       Fixed px on purpose: it stays the same on every monitor. */
+    --edge: 24px;
+
+    /* gap between cards: grows with the monitor (24px on small, ~38px at 1280, ~120px max on 4K) */
+    --gap: clamp(1.5rem, 3vw, 5rem);
+
+    /* resting card border (visible grey) */
+    --border: rgba(242, 242, 240, .3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* =====================================================
+   SCROLLBAR: thin, square, dark grey thumb that matches
+   the page (no JS needed)
+   ===================================================== */
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;                                  /* Firefox + Chrome 121+ */
+    scrollbar-color: rgba(242, 242, 240, .22) var(--bg);    /* thumb, track */
+}
+
+/* older Chrome / Edge / Safari fallback */
+@supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar { width: .6rem; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(242, 242, 240, .22);
+        border-radius: 0;
+        border-left: 1px solid var(--line);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+}
+
+html, body { min-height: 100%; background: var(--bg); color: var(--fg); }
+
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+
+::selection { background: var(--accent); color: var(--bg); }
+
+a {
+    color: inherit;
+    text-decoration-color: var(--line);
+    text-underline-offset: .25rem;
+    transition: color .2s, text-decoration-color .2s;
+}
+a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+:focus-visible { outline: 2px dashed var(--accent); outline-offset: .25rem; }
+
+/* =====================================================
+   HEADER: logo + title
+   ===================================================== */
+.logo-animation {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: clamp(1rem, 3vh, 2rem);
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* background layer 1: faint pixel grid, fading out toward the edges */
+.logo-animation::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%);
+            mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+}
+
+body.logo-ready .logo-animation::before { opacity: 1; }
+
+/* the final logo: simple fade-in, no wipe, no float */
+.logo {
+    --size: clamp(10rem, 40vmin, 22rem);
+    position: relative;
+    z-index: 1;
+    width: var(--size);
+    height: var(--size);
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.98);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.2,.8,.2,1);
+}
+
+.logo.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* full-header canvas where the lines fly in */
+#logo-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#logo-canvas.is-hidden { opacity: 0; }
+
+/* ---------- title: "Bilal-dev" + role ---------- */
+.title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    text-align: center;
+    color: var(--fg);
+
+    opacity: 0;
+    translate: 0 10px;
+    transition: opacity .3s ease .05s, translate .3s ease .05s;
+}
+
+body.logo-ready .title { opacity: 1; translate: 0 0; }
+
+/* the role is the only coloured text in the header */
+.title .role {
+    font-size: clamp(.8rem, 1.6vw, 1rem);
+    font-weight: 400;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+/* blinking pixel caret after the role */
+.title .role::after {
+    content: "";
+    display: inline-block;
+    width: .55em;
+    height: 1em;
+    margin-left: .4em;
+    vertical-align: -.15em;
+    background: var(--accent);
+    animation: caret .9s steps(1) infinite;
+}
+
+@keyframes caret { 50% { opacity: 0; } }
+
+/* ---------- scroll cue (empty element inside the header) ---------- */
+.scroll-cue {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    translate: -50% 0;
+    z-index: 1;
+    width: .9rem;
+    height: .9rem;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    rotate: 45deg;
+    opacity: 0;
+    animation: cue-in .4s ease 2s forwards, cue-bounce 1.6s steps(4) 2.4s infinite;
+}
+
+@keyframes cue-in     { to { opacity: 1; } }
+@keyframes cue-bounce { 50% { translate: -50% .5rem; } }
+
+/* =====================================================
+   NAV (optional, sticky after the header)
+   ===================================================== */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .9rem var(--edge);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav ul { display: flex; gap: 1.5rem; list-style: none; }
+
+.nav a {
+    position: relative;
+    font-family: var(--mono);
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    text-decoration: none;
+}
+
+/* accent underline that grows in pixel steps */
+.nav a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -.4rem;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s var(--step);
+}
+.nav a:hover { color: var(--accent); }
+.nav a:hover::after { transform: scaleX(1); }
+
+/* =====================================================
+   CONTENT: full width, same fixed gap to the window
+   border on every monitor
+   ===================================================== */
+.content-container {
+    border-top: 1px solid var(--line);
+    padding: clamp(3rem, 8vw, 6rem) var(--edge);
+}
+
+.content {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.content > * + .block {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    padding-top: clamp(3rem, 7vw, 5rem);
+    border-top: 1px solid var(--line);
+}
+
+/* one heading style for every section title (about, contact... and the projects label) */
+.block h2,
+#projects-container > p {
+    font-family: var(--mono);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    line-height: 1.2;
+    color: var(--fg);
+}
+
+.block h2 { margin-bottom: 1rem; }
+
+.block h2::before,
+#projects-container > p::before { content: "> "; color: var(--accent); }
+
+.block p {
+    max-width: 65ch;
+    color: var(--muted);
+}
+
+.block p + p { margin-top: 1rem; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--edge);
+    margin-top: 2rem;
+}
+
+/* ---------- about: text + skill tags ---------- */
+.about-card p { font-size: 1.05rem; }
+
+.about-card .tags {
+    gap: .6rem;
+    margin-top: 1.75rem;
+    padding: 0;                          /* cancel the card padding of .tags */
+}
+
+.about-card .tags li {
+    font-size: .85rem;
+    padding: .35rem .85rem;
+    border-color: var(--border);
+    color: var(--fg);
+    transition: border-color .2s, color .2s;
+}
+
+.about-card .tags li:hover { border-color: var(--accent); color: var(--accent); }
+
+/* =====================================================
+   ABOUT CARD: one big card with three empty sections
+   (about / skills / contact me). Same look as the project
+   cards: surface background, grey border, square corners.
+   ===================================================== */
+.content > .about-card {
+    margin-top: clamp(5rem, 12vw, 9rem); /* big gap so it never blends with the project cards */
+    padding: 0;                          /* the sections handle their own padding */
+    border: 2px solid var(--border);     /* clearly visible grey frame */
+    background: transparent;
+    border-radius: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.about-section { padding: clamp(1.5rem, 3vw, 2.5rem); }
+
+/* "about" takes the full top row, everything centred */
+.about-section.about-me {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+.about-section.about-me p {
+    max-width: 55ch;
+    margin-inline: auto;                 /* centre the text box */
+    font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+    font-weight: 300;                    /* lighter weight */
+    line-height: 1.6;
+    color: var(--fg);                    /* brighter than the muted grey */
+}
+
+/* skills: tags become a grid that fills the whole section (no empty space) */
+.about-section.skills { display: flex; flex-direction: column; }
+.about-card .skills .tags {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(3.5rem, 1fr);
+    gap: .75rem;
+    margin: 0;
+    padding: 0;
+}
+.about-card .skills .tags li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    font-size: clamp(.85rem, 1.1vw, 1rem);
+    text-align: center;
+}
+
+/* skills and contact sit side by side under it, with grey divider lines */
+.about-section.skills,
+.about-section.contact { border-top: 2px solid var(--border); }
+.about-section.contact { border-left: 2px solid var(--border); }
+
+/* the section titles reuse the "> " heading style from .block h2 */
+.about-section h2 { margin-bottom: 1.25rem; }
+
+/* ---------- contact: intro, link rows, button ---------- */
+.contact-intro { margin-bottom: 1.25rem; }
+
+.contact-list {
+    list-style: none;
+    margin-bottom: 1.75rem;
+    border-top: 1px solid var(--line);
+}
+
+.contact-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: .8rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.contact-label { font-family: var(--mono); font-size: .85rem; color: var(--muted); }
+.contact-list a { font-family: var(--mono); text-decoration: none; overflow-wrap: anywhere; }
+
+@media (max-width: 900px) {
+    .content > .about-card { grid-template-columns: 1fr; }
+    .about-section.contact { border-left: 0; }
+}
+
+/* =====================================================
+   PROJECTS: three cards that stretch with the window.
+   Hover = lift + accent frame fading in (cheap, no lag)
+   ===================================================== */
+#projects-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2.5rem);       /* smaller gap = wider cards, still 3 per row */
+    counter-reset: project;              /* numbers the cards 01, 02, 03 */
+}
+
+/* the label ("my projects") spans the full row; its look is set in the heading rule above */
+#projects-container > p {
+    grid-column: 1 / -1;
+}
+
+.project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border-radius: 0;                    /* square corners everywhere */
+    overflow: hidden;                    /* clips the image zoom */
+    cursor: pointer;                     /* the whole card is clickable */
+    will-change: transform;
+    transition: transform .3s ease;
+}
+
+/* resting grey border, drawn on top of the image so it is always visible */
+.project-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 2px var(--border);
+}
+
+/* accent frame: only its opacity animates, so it runs on the GPU */
+.project-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 3px var(--accent);
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.project-card:hover,
+.project-card:focus-within { transform: translateY(-6px); }
+
+.project-card:hover::after,
+.project-card:focus-within::after { opacity: 1; }
+
+/* full-bleed, full-colour image; same shape for every card even though the screenshots differ */
+.project-image {
+    order: -1;                           /* image on top even though the title comes first in your HTML */
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: top center;         /* keep the logo/header of each screenshot visible */
+    border-radius: 0;
+    background: var(--bg);
+    will-change: transform;
+    transition: transform .4s ease;
+}
+
+.project-card:hover .project-image,
+.project-card:focus-within .project-image { transform: scale(1.04); }
+
+/* title row: 01 / Forest SMP ........ -> */
+.project-name {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 1.4rem 1.75rem 1.5rem;
+    font-family: var(--mono);
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    line-height: 1.25;
+    border-top: 1px solid var(--line);
+}
+
+.project-name::before {
+    counter-increment: project;
+    content: counter(project, decimal-leading-zero);
+    margin-right: .35rem;
+    font-size: .8em;
+    font-weight: 400;
+    color: var(--accent);
+}
+
+/* arrow slides in on hover */
+.project-name::after {
+    content: "\2192";
+    margin-left: auto;
+    color: var(--accent);
+    opacity: .4;
+    transition: transform .3s ease, opacity .3s ease;
+}
+
+.project-card:hover .project-name::after,
+.project-card:focus-within .project-name::after {
+    transform: translateX(6px);
+    opacity: 1;
+}
+
+/* optional extras once you add them: description, tags, link */
+.project-card p  { padding: 0 1.5rem; color: var(--muted); font-size: .95rem; }
+.project-card a  { text-decoration: none; }
+
+.tags { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin-top: auto; padding: 1rem 1.5rem 1.5rem; }
+.tags li {
+    font-family: var(--mono);
+    font-size: .72rem;
+    padding: .2rem .55rem;
+    border: 1px solid var(--line);
+    color: var(--muted);
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+.btn {
+    display: inline-block;
+    padding: .75rem 1.4rem;
+    font-family: var(--mono);
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 0;
+    transition: background-color .25s, color .25s, transform .25s cubic-bezier(.2,.8,.2,1);
+}
+.btn:hover  { color: var(--accent); background: transparent; transform: translateY(-3px); }
+.btn:active { transform: translateY(0); }
+
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.ghost:hover { color: var(--accent); border-color: var(--accent); }
+
+/* =====================================================
+   SCROLL REVEAL (opt-in: add class="reveal" to a section;
+   removed from the project cards because it made them lag)
+   ===================================================== */
+@supports (animation-timeline: view()) {
+    .reveal {
+        animation: reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 35%;
+    }
+
+    @keyframes reveal {
+        from { opacity: 0; translate: 0 2rem; }
+        to   { opacity: 1; translate: 0 0; }
+    }
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.footer {
+    padding: 2rem var(--edge);
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--muted);
+}
+
+/* =====================================================
+   SMALLER WINDOWS: fewer cards per row
+   ===================================================== */
+@media (max-width: 900px) {
+    #projects-container { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    #projects-container { grid-template-columns: 1fr; }
+    .nav ul { gap: 1rem; }
+    .logo-animation::before { background-size: 1.75rem 1.75rem; }
+}
+
+/* =====================================================
+   REDUCED MOTION
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .logo { opacity: 1; transform: none; transition: none; }
+    #logo-canvas { display: none; }
+    .logo-animation::before { opacity: 1; transition: none; }
+    .title { opacity: 1; translate: 0 0; transition: none; }
+    .title .role::after { animation: none; }
+    .scroll-cue { animation: none; opacity: 1; }
+    .reveal { animation: none; }
+    .project-card, .project-card::after,
+    .project-image, .project-name::after, .btn, .nav a::after { transition: none; }
+}
