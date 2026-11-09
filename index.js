@@ -1,9 +1,9 @@
 const forestCard = document.querySelector("#forest-card")
 const borrelCard = document.querySelector("#borrel-card")
-const draftCard = document.querySelector("#draftSMP")
+const BallrCard = document.querySelector("#BallrSMP")
 
-draftCard.addEventListener("click",() =>{
-    window.open('https://draftsmp.netlify.app/', '_blank')
+BallrCard.addEventListener("click",() =>{
+    window.open('https://Ballrsmp-store.netlify.app/', '_blank')
 })
 borrelCard.addEventListener("click",() =>{
     window.open('https://borrelsmp.netlify.app/', '_blank')

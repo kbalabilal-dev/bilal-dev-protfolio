@@ -499,6 +499,37 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     font-weight: 400;
     color: var(--accent);
 }
+#BallrSMP .image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+#BallrSMP .project-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#BallrSMP .hover-img {
+    opacity: 0;
+}
+
+#BallrSMP:hover .hover-img,
+#BallrSMP:focus-within .hover-img {
+    opacity: 1;
+}
+
+#BallrSMP:hover .project-image,
+#BallrSMP:focus-within .project-image {
+    transform: scale(1.04);
+}
 
 /* arrow slides in on hover */
 .project-name::after {
