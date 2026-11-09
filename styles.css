@@ -1,54 +1,34 @@
-/* =====================================================
-   bilal-dev portfolio: dark grey + ONE accent colour
-   Drop-in replacement for your styles.css
-   ===================================================== */
+:root {
 
-   :root {
-    /* fluid root size: everything in rem scales with the monitor
-       ~14px on small screens, ~15.5px at 1280, ~17.7px at 1920,
-       ~20px at 1440p, capped at 24px on 4K */
     font-size: clamp(14px, 0.35vw + 11px, 24px);
 
-    /* greys */
-    --bg: #1c1c1e;                       /* page background: dark grey */
-    --surface: #252527;                  /* cards, nav */
-    --fg: #f2f2f0;                       /* main text */
-    --muted: rgba(242, 242, 240, .62);   /* secondary text */
-    --line: rgba(242, 242, 240, .12);    /* dividers */
-    --grid: rgba(242, 242, 240, .05);    /* header pixel grid */
+    --bg: #1c1c1e;
+    --surface: #252527;
+    --fg: #f2f2f0;
+    --muted: rgba(242, 242, 240, .62);
+    --line: rgba(242, 242, 240, .12);
+    --grid: rgba(242, 242, 240, .05);
 
-    /* the one special colour: pick ONE, comment out the others */
-    /* --accent: #22d3ee; */             /* cyan */
-    --accent: #ef4444;                   /* red */
-    /* --accent: #2f9e6e; */             /* dark green */
+    --accent: #ef4444;
 
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    --step: steps(6, end);               /* choppy "pixel" feel for hovers */
+    --step: steps(6, end);
 
-    /* distance from the window border and between cards.
-       Fixed px on purpose: it stays the same on every monitor. */
     --edge: 24px;
 
-    /* gap between cards: grows with the monitor (24px on small, ~38px at 1280, ~120px max on 4K) */
     --gap: clamp(1.5rem, 3vw, 5rem);
 
-    /* resting card border (visible grey) */
     --border: rgba(242, 242, 240, .3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* =====================================================
-   SCROLLBAR: thin, square, dark grey thumb that matches
-   the page (no JS needed)
-   ===================================================== */
 html {
     scroll-behavior: smooth;
-    scrollbar-width: thin;                                  /* Firefox + Chrome 121+ */
-    scrollbar-color: rgba(242, 242, 240, .22) var(--bg);    /* thumb, track */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(242, 242, 240, .22) var(--bg);
 }
 
-/* older Chrome / Edge / Safari fallback */
 @supports not (scrollbar-color: auto) {
     ::-webkit-scrollbar { width: .6rem; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -76,9 +56,6 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 :focus-visible { outline: 2px dashed var(--accent); outline-offset: .25rem; }
 
-/* =====================================================
-   HEADER: logo + title
-   ===================================================== */
 .logo-animation {
     position: relative;
     display: grid;
@@ -90,7 +67,6 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
     overflow: hidden;
 }
 
-/* background layer 1: faint pixel grid, fading out toward the edges */
 .logo-animation::before {
     content: "";
     position: absolute;
@@ -108,7 +84,6 @@ a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
 body.logo-ready .logo-animation::before { opacity: 1; }
 
-/* the final logo: simple fade-in, no wipe, no float */
 .logo {
     --size: clamp(10rem, 40vmin, 22rem);
     position: relative;
@@ -126,7 +101,6 @@ body.logo-ready .logo-animation::before { opacity: 1; }
     transform: scale(1);
 }
 
-/* full-header canvas where the lines fly in */
 #logo-canvas {
     position: absolute;
     inset: 0;
@@ -139,7 +113,6 @@ body.logo-ready .logo-animation::before { opacity: 1; }
 
 #logo-canvas.is-hidden { opacity: 0; }
 
-/* ---------- title: "Bilal-dev" + role ---------- */
 .title {
     position: relative;
     z-index: 1;
@@ -162,7 +135,6 @@ body.logo-ready .logo-animation::before { opacity: 1; }
 
 body.logo-ready .title { opacity: 1; translate: 0 0; }
 
-/* the role is the only coloured text in the header */
 .title .role {
     font-size: clamp(.8rem, 1.6vw, 1rem);
     font-weight: 400;
@@ -171,7 +143,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     color: var(--accent);
 }
 
-/* blinking pixel caret after the role */
 .title .role::after {
     content: "";
     display: inline-block;
@@ -185,7 +156,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 
 @keyframes caret { 50% { opacity: 0; } }
 
-/* ---------- scroll cue (empty element inside the header) ---------- */
 .scroll-cue {
     position: absolute;
     bottom: 2rem;
@@ -204,9 +174,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 @keyframes cue-in     { to { opacity: 1; } }
 @keyframes cue-bounce { 50% { translate: -50% .5rem; } }
 
-/* =====================================================
-   NAV (optional, sticky after the header)
-   ===================================================== */
 .nav {
     position: sticky;
     top: 0;
@@ -231,7 +198,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     text-decoration: none;
 }
 
-/* accent underline that grows in pixel steps */
 .nav a::after {
     content: "";
     position: absolute;
@@ -245,10 +211,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 .nav a:hover { color: var(--accent); }
 .nav a:hover::after { transform: scaleX(1); }
 
-/* =====================================================
-   CONTENT: full width, same fixed gap to the window
-   border on every monitor
-   ===================================================== */
 .content-container {
     border-top: 1px solid var(--line);
     padding: clamp(3rem, 8vw, 6rem) var(--edge);
@@ -265,7 +227,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     border-top: 1px solid var(--line);
 }
 
-/* one heading style for every section title (about, contact... and the projects label) */
 .block h2,
 #projects-container > p {
     font-family: var(--mono);
@@ -295,13 +256,12 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     margin-top: 2rem;
 }
 
-/* ---------- about: text + skill tags ---------- */
 .about-card p { font-size: 1.05rem; }
 
 .about-card .tags {
     gap: .6rem;
     margin-top: 1.75rem;
-    padding: 0;                          /* cancel the card padding of .tags */
+    padding: 0;
 }
 
 .about-card .tags li {
@@ -314,15 +274,10 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 
 .about-card .tags li:hover { border-color: var(--accent); color: var(--accent); }
 
-/* =====================================================
-   ABOUT CARD: one big card with three empty sections
-   (about / skills / contact me). Same look as the project
-   cards: surface background, grey border, square corners.
-   ===================================================== */
 .content > .about-card {
-    margin-top: clamp(5rem, 12vw, 9rem); /* big gap so it never blends with the project cards */
-    padding: 0;                          /* the sections handle their own padding */
-    border: 2px solid var(--border);     /* clearly visible grey frame */
+    margin-top: clamp(5rem, 12vw, 9rem);
+    padding: 0;
+    border: 2px solid var(--border);
     background: transparent;
     border-radius: 0;
     display: grid;
@@ -331,7 +286,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 
 .about-section { padding: clamp(1.5rem, 3vw, 2.5rem); }
 
-/* "about" takes the full top row, everything centred */
 .about-section.about-me {
     grid-column: 1 / -1;
     display: flex;
@@ -343,14 +297,13 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 }
 .about-section.about-me p {
     max-width: 55ch;
-    margin-inline: auto;                 /* centre the text box */
+    margin-inline: auto;
     font-size: clamp(1.2rem, 1.7vw, 1.6rem);
-    font-weight: 300;                    /* lighter weight */
+    font-weight: 300;
     line-height: 1.6;
-    color: var(--fg);                    /* brighter than the muted grey */
+    color: var(--fg);
 }
 
-/* skills: tags become a grid that fills the whole section (no empty space) */
 .about-section.skills { display: flex; flex-direction: column; }
 .about-card .skills .tags {
     flex: 1;
@@ -370,15 +323,12 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     text-align: center;
 }
 
-/* skills and contact sit side by side under it, with grey divider lines */
 .about-section.skills,
 .about-section.contact { border-top: 2px solid var(--border); }
 .about-section.contact { border-left: 2px solid var(--border); }
 
-/* the section titles reuse the "> " heading style from .block h2 */
 .about-section h2 { margin-bottom: 1.25rem; }
 
-/* ---------- contact: intro, link rows, button ---------- */
 .contact-intro { margin-bottom: 1.25rem; }
 
 .contact-list {
@@ -404,18 +354,13 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     .about-section.contact { border-left: 0; }
 }
 
-/* =====================================================
-   PROJECTS: three cards that stretch with the window.
-   Hover = lift + accent frame fading in (cheap, no lag)
-   ===================================================== */
 #projects-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1rem, 2vw, 2.5rem);       /* smaller gap = wider cards, still 3 per row */
-    counter-reset: project;              /* numbers the cards 01, 02, 03 */
+    gap: clamp(1rem, 2vw, 2.5rem);
+    counter-reset: project;
 }
 
-/* the label ("my projects") spans the full row; its look is set in the heading rule above */
 #projects-container > p {
     grid-column: 1 / -1;
 }
@@ -425,14 +370,13 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     display: flex;
     flex-direction: column;
     background: var(--surface);
-    border-radius: 0;                    /* square corners everywhere */
-    overflow: hidden;                    /* clips the image zoom */
-    cursor: pointer;                     /* the whole card is clickable */
+    border-radius: 0;
+    overflow: hidden;
+    cursor: pointer;
     will-change: transform;
     transition: transform .3s ease;
 }
 
-/* resting grey border, drawn on top of the image so it is always visible */
 .project-card::before {
     content: "";
     position: absolute;
@@ -442,7 +386,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     box-shadow: inset 0 0 0 2px var(--border);
 }
 
-/* accent frame: only its opacity animates, so it runs on the GPU */
 .project-card::after {
     content: "";
     position: absolute;
@@ -460,14 +403,13 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 .project-card:hover::after,
 .project-card:focus-within::after { opacity: 1; }
 
-/* full-bleed, full-colour image; same shape for every card even though the screenshots differ */
 .project-image {
-    order: -1;                           /* image on top even though the title comes first in your HTML */
+    order: -1;
     display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    object-position: top center;         /* keep the logo/header of each screenshot visible */
+    object-position: top center;
     border-radius: 0;
     background: var(--bg);
     will-change: transform;
@@ -477,7 +419,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 .project-card:hover .project-image,
 .project-card:focus-within .project-image { transform: scale(1.04); }
 
-/* title row: 01 / Forest SMP ........ -> */
 .project-name {
     display: flex;
     align-items: center;
@@ -531,7 +472,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     transform: scale(1.04);
 }
 
-/* arrow slides in on hover */
 .project-name::after {
     content: "\2192";
     margin-left: auto;
@@ -546,7 +486,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     opacity: 1;
 }
 
-/* optional extras once you add them: description, tags, link */
 .project-card p  { padding: 0 1.5rem; color: var(--muted); font-size: .95rem; }
 .project-card a  { text-decoration: none; }
 
@@ -559,9 +498,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     color: var(--muted);
 }
 
-/* =====================================================
-   BUTTONS
-   ===================================================== */
 .btn {
     display: inline-block;
     padding: .75rem 1.4rem;
@@ -582,10 +518,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
 .btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
 .btn.ghost:hover { color: var(--accent); border-color: var(--accent); }
 
-/* =====================================================
-   SCROLL REVEAL (opt-in: add class="reveal" to a section;
-   removed from the project cards because it made them lag)
-   ===================================================== */
 @supports (animation-timeline: view()) {
     .reveal {
         animation: reveal linear both;
@@ -599,9 +531,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     }
 }
 
-/* =====================================================
-   FOOTER
-   ===================================================== */
 .footer {
     padding: 2rem var(--edge);
     border-top: 1px solid var(--line);
@@ -611,9 +540,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     color: var(--muted);
 }
 
-/* =====================================================
-   SMALLER WINDOWS: fewer cards per row
-   ===================================================== */
 @media (max-width: 900px) {
     #projects-container { grid-template-columns: repeat(2, 1fr); }
 }
@@ -624,9 +550,6 @@ body.logo-ready .title { opacity: 1; translate: 0 0; }
     .logo-animation::before { background-size: 1.75rem 1.75rem; }
 }
 
-/* =====================================================
-   REDUCED MOTION
-   ===================================================== */
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .logo { opacity: 1; transform: none; transition: none; }
